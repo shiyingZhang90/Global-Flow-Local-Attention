@@ -28,7 +28,7 @@ class DanceDataset(AnimationDataset):
         parser.add_argument('--use_mask', action='store_true', help='whether load mask to split background and foreground')
 
         if is_train:
-            parser.set_defaults(load_size=256)
+            parser.set_defaults(load_size=512)
             parser.set_defaults(batchSize=2)
             parser.set_defaults(angle=True)
             parser.set_defaults(shift=True)
@@ -42,7 +42,7 @@ class DanceDataset(AnimationDataset):
             parser.add_argument('--cross_eval', action='store_true', help='use cross evaluation or not')        
 
 
-            parser.set_defaults(load_size=256)
+            parser.set_defaults(load_size=512)
             parser.set_defaults(batchSize=1)
             parser.set_defaults(angle=False)
             parser.set_defaults(shift=False)
@@ -61,7 +61,7 @@ class DanceDataset(AnimationDataset):
 
         parser.set_defaults(image_nc=3)
         parser.set_defaults(mask_nc=1)
-        parser.set_defaults(display_winsize=256)
+        parser.set_defaults(display_winsize=512)
         parser.set_defaults(no_bone_map=False)
         parser.set_defaults(debug=False)
         parser.set_defaults(structure_nc=17+3)

@@ -280,7 +280,7 @@ def extract_aligned_kp(pose, pose_format):
     return pose
 
 class tensor2skeleton():
-    def __init__(self, image_size=(256,256), spatial_draw=False):
+    def __init__(self, image_size=(512,512), spatial_draw=False):
         super(tensor2skeleton, self).__init__()
         self.image_size=image_size
         self.use_spatial_draw=spatial_draw
@@ -323,7 +323,7 @@ class tensor2skeleton():
         x = (x+1)/2*w
         x=x.astype(np.int)
         x[x<0]=0
-        x[x>255]=255
+        x[x>511]=511
         return x
 
     def draw_joint_for_vis(self, image_size, pose_joints, joint_line_list, radius=2, use_spatial_draw=False):
