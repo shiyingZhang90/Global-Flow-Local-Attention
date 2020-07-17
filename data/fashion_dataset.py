@@ -26,12 +26,14 @@ class FashionDataset(BaseDataset):
     def get_paths(self, opt):
         root = opt.dataroot
         phase = opt.phase
+        mask_dir = opt.mask_dir
         pairLst = os.path.join(root, 'fasion-pairs-%s.csv' % phase)
         name_pairs = self.init_categories(pairLst)
         
         image_dir = os.path.join(root, '%s' % phase)
+        cloth_mask_dir = os.path.join(root, '%s' % mask_dir)
         bonesLst = os.path.join(root, 'fasion-annotation-%s.csv' % phase)
-        return image_dir, bonesLst, name_pairs
+        return image_dir,cloth_mask_dir, bonesLst, name_pairs
 
 
     def init_categories(self, pairLst):

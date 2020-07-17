@@ -25,7 +25,7 @@ class BaseDataset(data.Dataset):
 
     def initialize(self, opt):
         self.opt = opt
-        self.image_dir, self.bone_file, self.name_pairs = self.get_paths(opt)
+        self.image_dir, self.cloth_mask_dir,self.bone_file, self.name_pairs = self.get_paths(opt)
         size = len(self.name_pairs)
         self.dataset_size = size
 
@@ -56,11 +56,23 @@ class BaseDataset(data.Dataset):
         P1_path = os.path.join(self.image_dir, P1_name) # person 1
         P2_path = os.path.join(self.image_dir, P2_name) # person 2
 
+        P1_cloth_mask_path = os.path.join(self.cloth_mask_dir, P1_name) # person 1
+        P2_cloth_mask_path = os.path.join(self.cloth_mask_dir, P2_name) # person 2
+
         P1_img = Image.open(P1_path).convert('RGB')
         P2_img = Image.open(P2_path).convert('RGB')
+
+        P1_cloth_mask = Image.open(P1_cloth_mask_path).convert('L')
+        P2_cloth_mask = Image.open(P2_cloth_mask_path).convert('L')
         
         P1_img = F.resize(P1_img, self.load_size)
         P2_img = F.resize(P2_img, self.load_size)
+
+        P1_cloth_mask = F.resize(P1_img, self.load_size)
+        P2_cloth_mask = F.resize(P2_img, self.load_size)
+
+        P1_cloth = self.trans(P1_cloth_mask)
+        P2_cloth = self.trans(P2_cloth_mask)
 
         angle, shift, scale = self.getRandomAffineParam()
         P1_img = F.affine(P1_img, angle=angle, translate=shift, scale=scale, shear=0, fillcolor=(128, 128, 128))
@@ -79,7 +91,7 @@ class BaseDataset(data.Dataset):
         P2 = self.trans(P2_img)
 
         return {'P1': P1, 'BP1': BP1, 'P2': P2, 'BP2': BP2,
-                'P1_path': P1_name, 'P2_path': P2_name}
+                'P1_path': P1_name, 'P2_path': P2_name, 'P1_cloth': P1_cloth, 'P2_cloth': P2_cloth, 'P1_cloth_mask_path': P1_cloth_mask_path,'P2_cloth_mask_path': P2_cloth_mask_path }
 
 
     def obtain_bone(self, name, affine_matrix):

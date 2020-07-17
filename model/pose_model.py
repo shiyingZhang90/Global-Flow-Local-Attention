@@ -99,6 +99,9 @@ class Pose(BaseModel):
         input_P1, input_BP1 = input['P1'], input['BP1']
         input_P2, input_BP2 = input['P2'], input['BP2']
 
+        input_P1_cloth = input['P1_cloth']
+        input_P2_cloth = input['P2_cloth']
+
         if len(self.gpu_ids) > 0:
             self.input_P1 = input_P1.cuda(self.gpu_ids[0], async=True)
             self.input_BP1 = input_BP1.cuda(self.gpu_ids[0], async=True)
