@@ -56,8 +56,10 @@ class BaseDataset(data.Dataset):
         P1_path = os.path.join(self.image_dir, P1_name) # person 1
         P2_path = os.path.join(self.image_dir, P2_name) # person 2
 
-        P1_cloth_mask_path = os.path.join(self.cloth_mask_dir, P1_name) # person 1
-        P2_cloth_mask_path = os.path.join(self.cloth_mask_dir, P2_name) # person 2
+        P1_prefix = P1_name.split('.')[0]
+        P2_prefix = P2_name.split('.')[0]
+        P1_cloth_mask_path = os.path.join(self.cloth_mask_dir, P1_prefix+'_mask.jpg') # person 1
+        P2_cloth_mask_path = os.path.join(self.cloth_mask_dir, P2_prefix+'_mask.jpg') # person 2
 
         P1_img = Image.open(P1_path).convert('RGB')
         P2_img = Image.open(P2_path).convert('RGB')
