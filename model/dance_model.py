@@ -38,6 +38,7 @@ class Dance(BaseModel):
         parser.add_argument('--lambda_correct', type=float, default=5.0, help='weight for generation loss')
         parser.add_argument('--lambda_style', type=float, default=500.0, help='weight for generation loss')
         parser.add_argument('--lambda_content', type=float, default=0.5, help='weight for generation loss')
+        parser.add_argument('--lambda_cloth_mask', type=float, default=0.01, help='weight for cloth mask loss')
         parser.add_argument('--lambda_regularization', type=float, default=0.0025, help='weight for generation loss')
         parser.add_argument('--frames_D_V', type=int, default=6, help='number of frames of D_V')
 
@@ -372,12 +373,18 @@ class Dance(BaseModel):
     def backward_G(self):
         """Calculate training loss for the generator"""
         loss_style_gen, loss_content_gen, loss_app_gen, loss_pose=0,0,0,0
+        loss_mask_app_gen = 0
 
         # Calculate the Reconstruction Loss
         for i in range(len(self.img_gen)):
             gen = self.img_gen[i]
             gt = self.P_step[:,i,...]
             loss_app_gen += self.L1loss(gen, gt)
+            # Add cloth mask  L1 loss
+            # TODO: populate self.cloth_mask with the binary mask corresponding
+            # to each frame, and uncomment the following line.
+            
+            # loss_mask_app_gen += torch.nn.L1loss(gen * self.cloth_mask, gt * self.cloth_mask)            
 
             content_gen, style_gen = self.Vggloss(gen, gt) 
             loss_style_gen += style_gen
@@ -386,6 +393,7 @@ class Dance(BaseModel):
         self.loss_style_gen = loss_style_gen * self.opt.lambda_style
         self.loss_content_gen = loss_content_gen * self.opt.lambda_content            
         self.loss_app_gen = loss_app_gen * self.opt.lambda_rec
+        self.loss_app_gen += loss_mask_app_gen * self.opt.lambda_cloth_mask
 
 
         loss_correctness_p, loss_regularization_p=0, 0
